@@ -55,7 +55,7 @@
     "alias": ["zh-cn", "chinese-simplified"],
     "flag": "cn"
   },
-  "zh-cn": {
+  "zh-tw": {
     "alias": ["zh-tw", "chinese-traditional"],
     "flag": "cn"
   },
