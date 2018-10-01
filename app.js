@@ -128,6 +128,7 @@ bot.on("messageCreate", async msg => {
           }
           if (tokens[idx].toLowerCase().startsWith('tg-'))
           {
+            console.log(`Channel ${c.name} Group: ${tokens[idx]}`);
             group = tokens[idx];
           }
 
@@ -149,6 +150,7 @@ bot.on("messageCreate", async msg => {
           }
           if (group === '')
           {
+            console.log(`Channel ${c.name} does not have a group, using the default`);
             group = 'tg-default';
           }
 
