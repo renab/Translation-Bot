@@ -151,7 +151,7 @@ bot.on("messageCreate", async msg => {
         console.log(`Checking lang ${langs[l]}`);
         for (let a in langs[l].alias) {
           console.log(`Checking alias ${langs[l].alias[a]}`);
-          if(langs[l].alias[a] === tsChannels[i].lang) {
+          if(langs[l].alias[a] === tsChannels[i].lang.substr(2)) {
             console.log(`${msg.channel.id} !== ${tsChannels[i].id}: ${msg.channel.id !== tsChannels[i].id}`);
             console.log(`${msgGroup} === ${tsChannels[i].group}: ${msgGroup === tsChannels[i].group}`);
             if (msg.channel.id !== tsChannels[i].id && msgGroup === tsChannels[i].group) tsChannelTranslate(l, msg.content, msgFlag)
