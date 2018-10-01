@@ -138,6 +138,7 @@ bot.on("messageCreate", async msg => {
         console.log(`Channel lang: ${lang}`);
         if (lang === '') return;
         if (group === '') group = 'tg-default';
+        if (msgGroup === '') msgGroup = 'tg-default';
         console.log(`Channel group: ${group}`);
 
         tsChannels.push({topic: c.topic, id: c.id, lang: lang, group: group})
@@ -148,6 +149,8 @@ bot.on("messageCreate", async msg => {
       for (let l in langs) {
         for (let a in langs[l].alias) {
           if(langs[l].alias[a] === tsChannels[i].lang) {
+            console.log(`${msg.channel.id} !== ${tsChannels[i].id}: ${msg.channel.id !== tsChannels[i].id}`);
+            console.log(`${msgGroup} === ${tsChannels[i].group}: ${msgGroup === tsChannels[i].group}`);
             if (msg.channel.id !== tsChannels[i].id && msgGroup === tsChannels[i].group) tsChannelTranslate(l, msg.content, msgFlag)
           }
         }
