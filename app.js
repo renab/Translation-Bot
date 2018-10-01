@@ -98,8 +98,10 @@ bot.on("messageCreate", async msg => {
     }
   }
   async function tsChannels() {
+    console.log('Processing tsChannels');
     if(!msg.channel.topic) return;
     if(!msg.channel.topic.toLowerCase().includes("ts-")) return;
+    console.log('Message sent in tsChannel');
     let tsChannels = [];
 
     let msgFlag = '';
@@ -110,6 +112,7 @@ bot.on("messageCreate", async msg => {
         let tokens = c.topic.split(' ');
         let lang = '';
         let group = '';
+        console.log(`Tokens: ${JSON.stringify(tokens, null, 3)}`);
         for (let idx in tokens)
         {
           if (!tokens.hasOwnProperty(idx)) continue;
