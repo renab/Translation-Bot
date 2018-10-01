@@ -144,6 +144,7 @@ bot.on("messageCreate", async msg => {
       }
     });
     if (msgGroup === '') msgGroup = 'tg-default';
+    console.log(`${JSON.stringify(tsChannels, null, 3)}`);
     for(i = 0; i < tsChannels.length; i++) {
       for (let l in langs) {
         for (let a in langs[l].alias) {
