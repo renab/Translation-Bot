@@ -98,8 +98,14 @@ bot.on("messageCreate", async msg => {
     }
   }
   async function tsChannels() {
-    if(!msg.channel.topic) return;
-    if(!msg.channel.topic.toLowerCase().includes("ts-")) return;
+    if(!msg.channel.topic)
+    {
+      return;
+    }
+    if(!msg.channel.topic.toLowerCase().includes("ts-"))
+    {
+      return;
+    }
     let tsChannels = [];
 
     let msgFlag = '';
@@ -110,10 +116,12 @@ bot.on("messageCreate", async msg => {
         let tokens = c.topic.split(' ');
         let lang = '';
         let group = '';
-        console.log(`Tokens: ${JSON.stringify(tokens, null, 3)}`);
         for (let idx in tokens)
         {
-          if (!tokens.hasOwnProperty(idx)) continue;
+          if (!tokens.hasOwnProperty(idx))
+          {
+            continue;
+          }
           if (tokens[idx].toLowerCase().startsWith('ts-'))
           {
             lang = tokens[idx];
@@ -128,23 +136,39 @@ bot.on("messageCreate", async msg => {
             msgGroup = group;
             for (let l in langs) {
               for (let a in langs[l].alias) {
-                msgFlag = `:flag_${langs[l].flag}:`;
+                if (lang.substr(3) === langs[l].alias[a])
+                {
+                  msgFlag = `:flag_${langs[l].flag}:`;
+                }
               }
             }
           }
-          if (lang === '') return;
-          if (group === '') group = 'tg-default';
+          if (lang === '')
+          {
+            return;
+          }
+          if (group === '')
+          {
+            group = 'tg-default';
+          }
 
           tsChannels.push({topic: c.topic, id: c.id, lang: lang, group: group})
         }
       }
     });
-    if (msgGroup === '') msgGroup = 'tg-default';
+    if (msgGroup === '')
+    {
+      msgGroup = 'tg-default';
+    }
     for(i = 0; i < tsChannels.length; i++) {
       for (let l in langs) {
         for (let a in langs[l].alias) {
           if(langs[l].alias[a] === tsChannels[i].lang.substr(3)) {
-            if (msg.channel.id !== tsChannels[i].id && msgGroup === tsChannels[i].group) tsChannelTranslate(l, msg.content, msgFlag, tsChannels[i].id)
+            if (msg.channel.id !== tsChannels[i].id && msgGroup === tsChannels[i].group)
+            {
+              console.log(`Message group: ${msgGroup} - Channel Group: ${tsChannels[i].group}`);
+              tsChannelTranslate(l, msg.content, msgFlag, tsChannels[i].id);
+            }
           }
         }
       }
