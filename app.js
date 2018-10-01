@@ -134,17 +134,16 @@ bot.on("messageCreate", async msg => {
               }
             }
           }
-        }
-        console.log(`Channel lang: ${lang}`);
-        if (lang === '') return;
-        if (group === '') group = 'tg-default';
-        if (msgGroup === '') msgGroup = 'tg-default';
-        console.log(`Channel group: ${group}`);
+          console.log(`Channel lang: ${lang}`);
+          if (lang === '') return;
+          if (group === '') group = 'tg-default';
+          console.log(`Channel group: ${group}`);
 
-        tsChannels.push({topic: c.topic, id: c.id, lang: lang, group: group})
+          tsChannels.push({topic: c.topic, id: c.id, lang: lang, group: group})
+        }
       }
     });
-    console.log(`Message group: ${msgGroup}`);
+    if (msgGroup === '') msgGroup = 'tg-default';
     for(i = 0; i < tsChannels.length; i++) {
       for (let l in langs) {
         for (let a in langs[l].alias) {
