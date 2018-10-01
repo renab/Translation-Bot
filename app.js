@@ -135,11 +135,15 @@ bot.on("messageCreate", async msg => {
             }
           }
         }
+        console.log(`Channel lang: ${lang}`);
         if (lang === '') return;
         if (group === '') group = 'tg-default';
+        console.log(`Channel group: ${group}`);
+
         tsChannels.push({topic: c.topic, id: c.id, lang: lang, group: group})
       }
     });
+    console.log(`Message group: ${msgGroup}`);
     for(i = 0; i < tsChannels.length; i++) {
       for (let l in langs) {
         for (let a in langs[l].alias) {
@@ -150,6 +154,7 @@ bot.on("messageCreate", async msg => {
       }
     }
     function tsChannelTranslate(lang, string, flag) {
+      console.log(`In tsChannelTranslate - ${lang} - ${string} - ${flag}`);
       if(string == "" || string == null || string == undefined) return;
       translate(string, { to: lang }).then(res => {
         if (res.text.length > 200) {
