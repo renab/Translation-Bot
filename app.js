@@ -124,7 +124,6 @@ bot.on("messageCreate", async msg => {
             lang = tokens[idx];
           }
           if (tokens[idx].toLowerCase().startsWith('tg-')) {
-            console.log(`Channel ${c.name} Group: ${tokens[idx]}`);
             group = tokens[idx];
           }
         }
@@ -135,7 +134,6 @@ bot.on("messageCreate", async msg => {
 
         if (group === '')
         {
-          console.log(`Channel ${c.name} does not have a group, using the default`);
           group = 'tg-default';
         }
 
@@ -164,7 +162,6 @@ bot.on("messageCreate", async msg => {
           if(langs[l].alias[a] === tsChannels[i].lang.substr(3)) {
             if (msg.channel.id !== tsChannels[i].id && msgGroup === tsChannels[i].group)
             {
-              console.log(`Message group: ${msgGroup} - Channel Group: ${tsChannels[i].group}`);
               tsChannelTranslate(l, msg.content, msgFlag, tsChannels[i].id);
             }
           }
