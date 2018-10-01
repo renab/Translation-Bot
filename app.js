@@ -98,10 +98,8 @@ bot.on("messageCreate", async msg => {
     }
   }
   async function tsChannels() {
-    console.log('Processing tsChannels');
     if(!msg.channel.topic) return;
     if(!msg.channel.topic.toLowerCase().includes("ts-")) return;
-    console.log('Message sent in tsChannel');
     let tsChannels = [];
 
     let msgFlag = '';
@@ -134,22 +132,18 @@ bot.on("messageCreate", async msg => {
               }
             }
           }
-          console.log(`Channel lang: ${lang}`);
           if (lang === '') return;
           if (group === '') group = 'tg-default';
-          console.log(`Channel group: ${group}`);
 
           tsChannels.push({topic: c.topic, id: c.id, lang: lang, group: group})
         }
       }
     });
     if (msgGroup === '') msgGroup = 'tg-default';
-    console.log(`${JSON.stringify(tsChannels, null, 3)}`);
     for(i = 0; i < tsChannels.length; i++) {
       for (let l in langs) {
         for (let a in langs[l].alias) {
-          console.log(`#${tsChannels[i].lang.substr(2)}`);
-          if(langs[l].alias[a] === tsChannels[i].lang.substr(2)) {
+          if(langs[l].alias[a] === tsChannels[i].lang.substr(3)) {
             console.log(`${msg.channel.id} !== ${tsChannels[i].id}: ${msg.channel.id !== tsChannels[i].id}`);
             console.log(`${msgGroup} === ${tsChannels[i].group}: ${msgGroup === tsChannels[i].group}`);
             if (msg.channel.id !== tsChannels[i].id && msgGroup === tsChannels[i].group) tsChannelTranslate(l, msg.content, msgFlag)
@@ -158,7 +152,6 @@ bot.on("messageCreate", async msg => {
       }
     }
     function tsChannelTranslate(lang, string, flag) {
-      console.log(`In tsChannelTranslate - ${lang} - ${string} - ${flag}`);
       if(string == "" || string == null || string == undefined) return;
       translate(string, { to: lang }).then(res => {
         if (res.text.length > 200) {
