@@ -144,14 +144,12 @@ bot.on("messageCreate", async msg => {
       for (let l in langs) {
         for (let a in langs[l].alias) {
           if(langs[l].alias[a] === tsChannels[i].lang.substr(3)) {
-            console.log(`${msg.channel.id} !== ${tsChannels[i].id}: ${msg.channel.id !== tsChannels[i].id}`);
-            console.log(`${msgGroup} === ${tsChannels[i].group}: ${msgGroup === tsChannels[i].group}`);
-            if (msg.channel.id !== tsChannels[i].id && msgGroup === tsChannels[i].group) tsChannelTranslate(l, msg.content, msgFlag)
+            if (msg.channel.id !== tsChannels[i].id && msgGroup === tsChannels[i].group) tsChannelTranslate(l, msg.content, msgFlag, tsChannels[i].id)
           }
         }
       }
     }
-    function tsChannelTranslate(lang, string, flag) {
+    function tsChannelTranslate(lang, string, flag, targetChannel) {
       if(string == "" || string == null || string == undefined) return;
       translate(string, { to: lang }).then(res => {
         if (res.text.length > 200) {
