@@ -116,46 +116,42 @@ bot.on("messageCreate", async msg => {
         let tokens = c.topic.split(' ');
         let lang = '';
         let group = '';
-        for (let idx in tokens)
-        {
-          if (!tokens.hasOwnProperty(idx))
-          {
+        for (let idx in tokens) {
+          if (!tokens.hasOwnProperty(idx)) {
             continue;
           }
-          if (tokens[idx].toLowerCase().startsWith('ts-'))
-          {
+          if (tokens[idx].toLowerCase().startsWith('ts-')) {
             lang = tokens[idx];
           }
-          if (tokens[idx].toLowerCase().startsWith('tg-'))
-          {
+          if (tokens[idx].toLowerCase().startsWith('tg-')) {
             console.log(`Channel ${c.name} Group: ${tokens[idx]}`);
             group = tokens[idx];
           }
+        }
+        if (lang === '')
+        {
+          return;
+        }
 
-          if (c.id === msg.channel.id)
-          {
-            msgGroup = group;
-            for (let l in langs) {
-              for (let a in langs[l].alias) {
-                if (lang.substr(3) === langs[l].alias[a])
-                {
-                  msgFlag = `:flag_${langs[l].flag}:`;
-                }
+        if (group === '')
+        {
+          console.log(`Channel ${c.name} does not have a group, using the default`);
+          group = 'tg-default';
+        }
+
+        if (c.id === msg.channel.id)
+        {
+          msgGroup = group;
+          for (let l in langs) {
+            for (let a in langs[l].alias) {
+              if (lang.substr(3) === langs[l].alias[a])
+              {
+                msgFlag = `:flag_${langs[l].flag}:`;
               }
             }
           }
-          if (lang === '')
-          {
-            return;
-          }
-          if (group === '')
-          {
-            console.log(`Channel ${c.name} does not have a group, using the default`);
-            group = 'tg-default';
-          }
-
-          tsChannels.push({topic: c.topic, id: c.id, lang: lang, group: group})
         }
+        tsChannels.push({topic: c.topic, id: c.id, lang: lang, group: group});
       }
     });
     if (msgGroup === '')
