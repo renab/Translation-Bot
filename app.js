@@ -45,7 +45,7 @@ bot.on("messageCreate", async msg => {
   if(command.toLowerCase() === "guilds") return guilds()
   if(command.toLowerCase() === "exec") return exec()
   if(command.toLowerCase() === "patreon") return patreon()
-  if(msg.content.toLowerCase().indexOf(prefix + " ") == 0) { 
+  if(msg.content.toLowerCase().indexOf(prefix + " ") == 0) {
     let langs = require("./langmap.json")
     let LangMap = new Map()
     let thingToTranslate = args.join(" ");
@@ -98,39 +98,63 @@ bot.on("messageCreate", async msg => {
     }
   }
   async function tsChannels() {
-    if(!msg.channel.topic) return
-    if(!msg.channel.topic.toLowerCase().startsWith("ts-")) return
-    let tsChannels = []
+    if(!msg.channel.topic) return;
+    if(!msg.channel.topic.toLowerCase().includes("ts-")) return;
+    let tsChannels = [];
+
+    let msgFlag = '';
+    let msgGroup = '';
+
     msg.channel.guild.channels.map(c => {
       if(c.topic) {
-        if(c.topic.toLowerCase().startsWith("ts-")) tsChannels.push({topic: c.topic, id: c.id})
+        let tokens = c.topic.split(' ');
+        let lang = '';
+        let group = '';
+        for (let idx in tokens)
+        {
+          if (!tokens.hasOwnProperty(idx)) continue;
+          if (tokens[idx].toLowerCase().startsWith('ts-'))
+          {
+            lang = tokens[idx];
+          }
+          if (tokens[idx].toLowerCase().startsWith('tg-'))
+          {
+            group = tokens[idx];
+          }
+
+          if (c.id === msg.channel.id)
+          {
+            msgGroup = group;
+            for (let a in langs[l].alias) {
+              msgFlag = `:flag_${langs[l].flag}:`;
+            }
+          }
+        }
+        if (lang === '') return;
+        if (group === '') group = 'tg-default';
+        tsChannels.push({topic: c.topic, id: c.id, lang: lang, group: group})
       }
-    })
+    });
     for(i = 0; i < tsChannels.length; i++) {
-      let channelLangReg = /(?<=ts\-)\S+/i;
-      let channelLang = channelLangReg.exec(tsChannels[i].topic.toLowerCase());
-      channelLang = channelLang[channelLang.length - 1]
       for (let l in langs) {
         for (let a in langs[l].alias) {
-          if(langs[l].alias[a] === channelLang) {
-            tsChannelTranslate(l, msg.content, `:flag_${langs[l].flag}:`, msg.channel.id, tsChannels[i].id)
+          if(langs[l].alias[a] === tsChannels[i].lang) {
+            if (msg.channel.id !== tsChannels[i].id && msgGroup === tsChannels[i].group) tsChannelTranslate(l, msg.content, msgFlag)
           }
         }
       }
     }
-    function tsChannelTranslate(lang, string, flag, sourceChannel, targetChannel) {
+    function tsChannelTranslate(lang, string, flag) {
       if(string == "" || string == null || string == undefined) return;
-      if(targetChannel !== sourceChannel) {
-        translate(string, { to: lang }).then(res => {
-          if (res.text.length > 200) {
-            bot.createMessage(targetChannel, `**${msg.author.username}#${msg.author.discriminator}**: ${res.text}`);
-          } else {
-            bot.createMessage(targetChannel, { embed: {
-              color: 0xFFFFFF, description: `${flag} ${res.text}`, author: {name: `${msg.author.username}#${msg.author.discriminator}`, icon_url: msg.author.avatarURL ? msg.author.avatarURL : msg.author.defaultAvatarURL}
-            }});
-          }
-        }).catch(err => console.error(err) );
-      }
+      translate(string, { to: lang }).then(res => {
+        if (res.text.length > 200) {
+          bot.createMessage(targetChannel, `**${msg.author.username}#${msg.author.discriminator}**: ${res.text}`);
+        } else {
+          bot.createMessage(targetChannel, { embed: {
+            color: 0xFFFFFF, description: `${flag} ${res.text}`, author: {name: `${msg.author.username}#${msg.author.discriminator}`, icon_url: msg.author.avatarURL ? msg.author.avatarURL : msg.author.defaultAvatarURL}
+          }});
+        }
+      }).catch(err => console.error(err) );
     }
   }
 
@@ -347,7 +371,7 @@ bot.on("messageCreate", async msg => {
   async function patreon() {
     msg.channel.createMessage("Here is a link to our patreon, where you can support our developments! https://www.patreon.com/TannerReynolds")
   }
-  
+
 })
 
 bot.connect()
