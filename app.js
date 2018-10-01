@@ -146,8 +146,11 @@ bot.on("messageCreate", async msg => {
     if (msgGroup === '') msgGroup = 'tg-default';
     console.log(`${JSON.stringify(tsChannels, null, 3)}`);
     for(i = 0; i < tsChannels.length; i++) {
+      console.log(`Checking channel ${tsChannels[i]}`);
       for (let l in langs) {
+        console.log(`Checking lang ${langs[l]}`);
         for (let a in langs[l].alias) {
+          console.log(`Checking alias ${langs[l].alias[a]}`);
           if(langs[l].alias[a] === tsChannels[i].lang) {
             console.log(`${msg.channel.id} !== ${tsChannels[i].id}: ${msg.channel.id !== tsChannels[i].id}`);
             console.log(`${msgGroup} === ${tsChannels[i].group}: ${msgGroup === tsChannels[i].group}`);
