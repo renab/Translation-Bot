@@ -125,8 +125,10 @@ bot.on("messageCreate", async msg => {
           if (c.id === msg.channel.id)
           {
             msgGroup = group;
-            for (let a in langs[l].alias) {
-              msgFlag = `:flag_${langs[l].flag}:`;
+            for (let l in langs) {
+              for (let a in langs[l].alias) {
+                msgFlag = `:flag_${langs[l].flag}:`;
+              }
             }
           }
         }
