@@ -162,13 +162,24 @@ bot.on("messageCreate", async msg => {
           if(langs[l].alias[a] === tsChannels[i].lang.substr(3)) {
             if (msg.channel.id !== tsChannels[i].id && msgGroup === tsChannels[i].group)
             {
-              tsChannelTranslate(l, msg.content, msgFlag, tsChannels[i].id);
+              tsChannelTranslate(l, msg.content, msgFlag, tsChannels[i].id, msg);
             }
           }
         }
       }
     }
-    function tsChannelTranslate(lang, string, flag, targetChannel) {
+    function tsChannelTranslate(lang, string, flag, targetChannel, msg) {
+      if (msg.embeds && msg.embeds.length > 0)
+      {
+        for (let embed in msg.embeds) {
+          if (msg.embeds.hasOwnProperty(embed)) {
+            bot.createMessage(targetChannel, {
+              content: `**${msg.author.username}#${msg.author.discriminator}**:`,
+              embed: msg.embeds[embed]
+            });
+          }
+        }
+      }
       if(string == "" || string == null || string == undefined) return;
       translate(string, { to: lang }).then(res => {
         if (res.text.length > 200) {
