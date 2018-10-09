@@ -169,6 +169,7 @@ bot.on("messageCreate", async msg => {
       }
     }
     function tsChannelTranslate(lang, string, flag, targetChannel, msg) {
+      console.log(`${JSON.stringify(msg, null, 3)}`);
       if (msg.embeds && msg.embeds.length > 0)
       {
         for (let embed in msg.embeds) {
