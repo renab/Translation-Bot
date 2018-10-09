@@ -169,14 +169,17 @@ bot.on("messageCreate", async msg => {
       }
     }
     function tsChannelTranslate(lang, string, flag, targetChannel, msg) {
-      console.log(`${JSON.stringify(msg.attachments, null, 3)}`);
-      if (msg.embeds && msg.embeds.length > 0)
+      if (msg.attachments && msg.attachments.length > 0)
       {
-        for (let embed in msg.embeds) {
-          if (msg.embeds.hasOwnProperty(embed)) {
+        for (let attachment in msg.attachments) {
+          if (msg.attachments.hasOwnProperty(attachment)) {
             bot.createMessage(targetChannel, {
               content: `**${msg.author.username}#${msg.author.discriminator}**:`,
-              embed: msg.embeds[embed]
+              embed: {
+                color: 3447003,
+                description: msg.attachments[attachment].url,
+                image: {url: msg.attachments[attachment].url}
+              }
             });
           }
         }
