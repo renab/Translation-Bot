@@ -71,9 +71,14 @@ bot.on("messageCreate", async msg => {
       case "zalgo": return funTranslation(zalgo(thingToTranslate), ":upside_down:");
       case "gang": case "gangsta": G.string(thingToTranslate, (err, result)=>{ if(err){ return msg.channel.createMessage("Oops, there was an error!\nDid you forget to enter something to translate?") } return funTranslation(result, ":gun:") }); break;
     }
+    function fixLinks(text) {
+       text = text.replace(/<([@#]&?!?)\s*(\d+)>/g, '<$1$2>');
+       return text;
+    }
     function translateFunction(lang, string, flag){
       if(string == "" || string == null || string == undefined) return msg.channel.createMessage("Nothing to translate!");
       translate(string, { to: lang }).then((res)=>{
+        res.text = fixLinks(res.text);
         if (res.text.length > 200) {
           return msg.channel.createMessage(`${flag}\n${res.text}`);
         }
@@ -186,6 +191,7 @@ bot.on("messageCreate", async msg => {
       }
       if(string == "" || string == null || string == undefined) return;
       translate(string, { to: lang }).then(res => {
+        res.text = fixLinks(res.text);
         if (res.text.length > 200) {
           bot.createMessage(targetChannel, `**${msg.author.username}#${msg.author.discriminator}**: ${res.text}`);
         } else {
