@@ -15,6 +15,10 @@ const devs = tlcfg.owner
 const ostb = require("os-toolbox");
 const langs = require("./langmap.json")
 let guildSize = null, shardSize = null, botInit = new Date();
+let fixLinks = function(text) {
+   text = text.replace(/<([@#]&?!?)\s*(\d+)>/g, '<$1$2>');
+   return text;
+};
 bot.on("ready", () => {
   let readyTime = new Date(), startTime = Math.floor( (readyTime - botInit) / 1000), userCount = bot.users.size
   console.log(`bot ONLINE. ${bot.guilds.size} guilds, serving ${userCount} users.`)
@@ -30,26 +34,27 @@ bot.on("ready", () => {
   })
 })
 bot.on("messageCreate", async msg => {
-  if(msg.author.bot) return
-  const tsChannelsEnabled = tlcfg.tsChannelsEnabled
+  const outer = this;
+  if(msg.author.bot) return;
+  const tsChannelsEnabled = tlcfg.tsChannelsEnabled;
   const args = msg.content.slice(prefix.length).trim().split(/ +/g);
   const command = args.shift().toString().toLowerCase();
   if(tsChannelsEnabled) tsChannels()
   if(msg.content.toLowerCase().indexOf(prefix) !== 0) return;
-  if(command.toLowerCase() === "help") return help()
-  if(command.toLowerCase() === "eval") return evalcmd()
-  if(command.toLowerCase() === "shards") return shards()
-  if(command.toLowerCase() === "invite") return invite()
-  if(command.toLowerCase() === "ping") return ping()
-  if(command.toLowerCase() === "stats") return stats()
-  if(command.toLowerCase() === "guilds") return guilds()
-  if(command.toLowerCase() === "exec") return exec()
-  if(command.toLowerCase() === "patreon") return patreon()
+  if(command.toLowerCase() === "help") return help();
+  if(command.toLowerCase() === "eval") return evalcmd();
+  if(command.toLowerCase() === "shards") return shards();
+  if(command.toLowerCase() === "invite") return invite();
+  if(command.toLowerCase() === "ping") return ping();
+  if(command.toLowerCase() === "stats") return stats();
+  if(command.toLowerCase() === "guilds") return guilds();
+  if(command.toLowerCase() === "exec") return exec();
+  if(command.toLowerCase() === "patreon") return patreon();
   if(msg.content.toLowerCase().indexOf(prefix + " ") == 0) {
-    let langs = require("./langmap.json")
-    let LangMap = new Map()
+    let langs = require("./langmap.json");
+    let LangMap = new Map();
     let thingToTranslate = args.join(" ");
-    if (command === "lang") return languageDetection(thingToTranslate)
+    if (command === "lang") return languageDetection(thingToTranslate);
     for (let l in langs) {
       for (let a in langs[l].alias) {
         LangMap.set(langs[l].alias[a], (args) => {
@@ -57,7 +62,7 @@ bot.on("messageCreate", async msg => {
         })
       }
     }
-    let toT = LangMap.get(command)
+    let toT = LangMap.get(command);
     if (toT) {
       return toT(args)
     }
@@ -70,10 +75,6 @@ bot.on("messageCreate", async msg => {
       case "flip": case "flipped": return funTranslation(flip(thingToTranslate), ":upside_down:");
       case "zalgo": return funTranslation(zalgo(thingToTranslate), ":upside_down:");
       case "gang": case "gangsta": G.string(thingToTranslate, (err, result)=>{ if(err){ return msg.channel.createMessage("Oops, there was an error!\nDid you forget to enter something to translate?") } return funTranslation(result, ":gun:") }); break;
-    }
-    function fixLinks(text) {
-       text = text.replace(/<([@#]&?!?)\s*(\d+)>/g, '<$1$2>');
-       return text;
     }
     function translateFunction(lang, string, flag){
       if(string == "" || string == null || string == undefined) return msg.channel.createMessage("Nothing to translate!");
